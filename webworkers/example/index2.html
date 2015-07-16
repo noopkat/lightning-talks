@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>web worker demo</title>
+    <style>
+      body {
+        padding: 50px;
+        font-family: sans-serif;
+      }
+      h1 {
+        font-size: 70px;
+        font-weight: normal;
+        color:#aaa;
+      }
+      button {
+        padding: 50px;
+        font-size: 50px;
+        margin-right: 50px;
+        border: 5px solid #000;
+        cursor: pointer;
+      }
+      #button1 {
+        background-color: #D9BEE8;
+      } 
+      #button1:active {
+        background-color: #BD57DA;
+      }
+      #button2 {
+        background-color: #CDE8BE;
+      }
+      #button2:active {
+        background-color: #74DA57;
+      }
+      div {
+        font-size: 50px;
+        font-weight: bold;
+        margin-bottom: 30px;
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Using Worker Thread</h1>
+    <button id="button1">Do Work</button> 
+    <button id="button2">Click Me</button>
+
+    <div id="content1"></div>
+    <div id="content2"></div>
+
+    <script>
+      // buttons
+      var button1 = document.getElementById('button1');
+      var button2 = document.getElementById('button2');
+
+      // divs
+      var content1 = document.getElementById('content1');
+      var content2 = document.getElementById('content2');
+
+      button1.addEventListener('click', function() {
+        doWork(8);
+      });
+
+      button2.addEventListener('click', function() {
+        // update UI immediately on button click
+        content2.innerHTML = "you clicked the 'click me' button!"
+      });
+
+      // new worker, pass in worker file
+      var myWorker = new Worker('worker.js');
+
+      myWorker.onmessage = function(e) {
+        // update UI when worker is done
+        content1.innerHTML = 'work done! ' + e.data;
+      };
+
+      function doWork(n) {
+        // post some data to worker
+        myWorker.postMessage(n);
+      }
+      
+    </script>
+
+  <body>
+</html>
